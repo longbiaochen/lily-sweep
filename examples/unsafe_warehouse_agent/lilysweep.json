@@ -1,0 +1,24 @@
+{
+  "exclude_paths": [
+    "ignored/**"
+  ],
+  "ros": {
+    "dangerous_topics": [
+      "/dock_lock/release"
+    ],
+    "dangerous_services": [
+      "/door_power_cycle"
+    ],
+    "dangerous_actions": [
+      "/forklift/move_pallet"
+    ]
+  },
+  "suppressions": [
+    {
+      "id": "direct-actuator-surface",
+      "location": "ros/bringup.launch.py",
+      "evidence_contains": "/cmd_vel",
+      "reason": "covered by ros-dangerous-topic in this fixture"
+    }
+  ]
+}

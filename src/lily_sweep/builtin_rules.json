@@ -1,0 +1,56 @@
+[
+  {
+    "id": "dangerous-shell-exec",
+    "title": "Dangerous shell execution surface",
+    "severity": "high",
+    "category": "code-execution",
+    "regex": "\\b(os\\.system|subprocess\\.(?:run|Popen|call|check_output)\\s*\\([^\\n\\r)]*shell\\s*=\\s*True)",
+    "extensions": [".py"],
+    "remediation": "Replace shell execution with structured argument lists or isolate it behind a reviewed broker."
+  },
+  {
+    "id": "hardcoded-openai-key",
+    "title": "Hardcoded OpenAI-style API key material",
+    "severity": "critical",
+    "category": "secret-management",
+    "regex": "sk-[A-Za-z0-9]{20,}",
+    "extensions": ["*"],
+    "remediation": "Remove key material from the repo and load it from a secret store or deployment environment."
+  },
+  {
+    "id": "private-key-material",
+    "title": "Private key material committed to the repo",
+    "severity": "critical",
+    "category": "secret-management",
+    "regex": "BEGIN [A-Z ]*PRIVATE KEY",
+    "extensions": ["*"],
+    "remediation": "Rotate the key and remove the private material from version control."
+  },
+  {
+    "id": "wildcard-tool-allowlist",
+    "title": "Wildcard tool access grant",
+    "severity": "high",
+    "category": "harness-permissions",
+    "regex": "(allow_all_tools\\s*[:=]\\s*True|tool_allowlist\\s*[:=]\\s*\\[[^\\]]*\\*|\"tool_allowlist\"\\s*:\\s*\\[[^\\]]*\"\\*\")",
+    "extensions": [".py", ".json", ".yaml", ".yml", ".toml"],
+    "remediation": "Replace wildcard grants with an explicit allowlist and scope tools by environment or role."
+  },
+  {
+    "id": "destructive-command-fragment",
+    "title": "Destructive system command fragment",
+    "severity": "critical",
+    "category": "system-integrity",
+    "regex": "(rm\\s+-rf\\s+/|shutdown\\s+-h|\\breboot\\b|mkfs\\.)",
+    "extensions": [".sh", ".py", ".js", ".ts", ".yaml", ".yml", ".json", ".toml"],
+    "remediation": "Fence destructive system commands behind explicit operator approval or remove them from agent-facing code paths."
+  },
+  {
+    "id": "direct-actuator-surface",
+    "title": "Direct actuator control surface reference",
+    "severity": "medium",
+    "category": "actuator-surface",
+    "regex": "(cmd_vel|joint_trajectory|gripper_command|unlock-door|elevator-control|arm_controller)",
+    "extensions": [".py", ".json", ".yaml", ".yml", ".toml"],
+    "remediation": "Audit whether the referenced actuator surface is gated by role, rate, workspace boundary, and deployment mode."
+  }
+]

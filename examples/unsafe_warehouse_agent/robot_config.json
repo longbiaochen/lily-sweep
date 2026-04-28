@@ -1,0 +1,9 @@
+{
+  "tool_allowlist": ["*"],
+  "human_approval": false,
+  "dry_run": false,
+  "rate_limit": null,
+  "rollback_strategy": "",
+  "workspace_boundary": "",
+  "notes": "Forklift lane intersects the public_lobby and elevator bank."
+}

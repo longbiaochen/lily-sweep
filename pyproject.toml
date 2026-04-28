@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lily-sweep"
+version = "0.1.0"
+description = "Preflight hazard scanning for embodied AI systems."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "Longbiao + Codex" }
+]
+dependencies = []
+
+[project.scripts]
+lily-sweep = "lily_sweep.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lily_sweep"]

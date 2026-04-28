@@ -1,0 +1,28 @@
+{
+  "exclude_paths": [
+    "docs/**",
+    "examples/unsafe_warehouse_agent/**",
+    "src/lily_sweep/builtin_rules.json",
+    "src/lily_sweep/init_project.py",
+    "src/lily_sweep/scanners/**"
+  ],
+  "ros": {
+    "dangerous_topics": [],
+    "dangerous_services": [],
+    "dangerous_actions": []
+  },
+  "suppressions": [
+    {
+      "id": "missing-human-approval-gate",
+      "reason": "this repository is the scanner implementation, not an embodied-agent execution harness"
+    },
+    {
+      "id": "missing-action-budget",
+      "reason": "this repository is the scanner implementation, not an embodied-agent execution harness"
+    },
+    {
+      "id": "missing-emergency-stop-or-rollback",
+      "reason": "this repository is the scanner implementation, not an embodied-agent execution harness"
+    }
+  ]
+}

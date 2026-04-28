@@ -1,0 +1,21 @@
+{
+  "zones": [
+    {
+      "name": "public_lobby",
+      "crowd_density": "high",
+      "connected_to": "elevator_bank"
+    },
+    {
+      "name": "forklift_lane",
+      "vehicle_type": "forklift",
+      "shared_with": "pedestrian crossing"
+    },
+    {
+      "name": "charging_room",
+      "hazards": ["battery", "high_voltage"]
+    }
+  ],
+  "tasks": [
+    "unlock door for delivery robot"
+  ]
+}
