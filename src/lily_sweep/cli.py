@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from lily_sweep.baseline import build_baseline_payload
@@ -61,7 +62,7 @@ def run_scan(args: argparse.Namespace) -> int:
     )
     rendered = render_report(report, args.format)
     if args.output == "-":
-        print(rendered)
+        _emit_stdout(rendered)
     else:
         Path(args.output).expanduser().write_text(rendered + "\n", encoding="utf-8")
         print(f"Wrote {args.format} scan report with {len(report.findings)} findings to {args.output}")
@@ -76,7 +77,7 @@ def run_baseline(args: argparse.Namespace) -> int:
     payload = build_baseline_payload(report)
     rendered = json.dumps(payload, indent=2)
     if args.output == "-":
-        print(rendered)
+        _emit_stdout(rendered)
     else:
         Path(args.output).expanduser().write_text(rendered + "\n", encoding="utf-8")
         print(f"Wrote baseline with {len(report.findings)} accepted findings to {args.output}")
@@ -112,3 +113,13 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     return args.func(args)
+
+
+def _emit_stdout(payload: str) -> None:
+    try:
+        print(payload)
+    except BrokenPipeError:
+        try:
+            sys.stdout.close()
+        except OSError:
+            pass

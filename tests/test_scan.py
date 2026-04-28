@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from contextlib import redirect_stdout
+from unittest.mock import patch
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -140,6 +141,19 @@ class LilySweepScanTests(unittest.TestCase):
             self.assertEqual(exit_code, 0)
             self.assertIn("Skipped existing", stdout.getvalue())
             self.assertEqual(json.loads(config_path.read_text(encoding="utf-8")), {"existing": True})
+
+    def test_cli_handles_broken_pipe_without_raising(self) -> None:
+        class _BrokenPipeStdout(io.StringIO):
+            def write(self, __s: str) -> int:
+                raise BrokenPipeError
+
+            def close(self) -> None:
+                return None
+
+        with patch("sys.stdout", new=_BrokenPipeStdout()):
+            exit_code = main(["scan", str(self.fixture)])
+
+        self.assertEqual(exit_code, 0)
 
 
 if __name__ == "__main__":
