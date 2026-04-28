@@ -38,6 +38,12 @@ class LilySweepScanTests(unittest.TestCase):
         self.assertIn("/dock_lock/release", ros_evidence)
         self.assertIn("/door_power_cycle", ros_evidence)
         self.assertNotIn("ignored/ignored_agent.py", finding_locations)
+        # Phase 1/2 additions
+        self.assertIn("eval-exec-injection", finding_ids)
+        self.assertIn("insecure-deserialization", finding_ids)
+        self.assertIn("hardcoded-robot-endpoint", finding_ids)
+        self.assertIn("llm-input-to-shell", finding_ids)
+        self.assertIn("unvalidated-tool-call-forwarding", finding_ids)
 
     def test_cli_json_output_and_threshold_exit(self) -> None:
         stdout = io.StringIO()

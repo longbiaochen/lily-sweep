@@ -9,6 +9,7 @@ from lily_sweep.models import Finding, ScanReport
 from lily_sweep.rule_loader import load_pattern_rules
 from lily_sweep.scanners.harness import HarnessScanner
 from lily_sweep.scanners.patterns import PatternScanner
+from lily_sweep.scanners.prompt_injection import PromptInjectionScanner
 from lily_sweep.scanners.ros_control import RosControlScanner
 from lily_sweep.scanners.scenario import ScenarioScanner
 from lily_sweep.suppressions import filter_suppressed_findings
@@ -91,6 +92,7 @@ def scan_path(
         HarnessScanner(),
         RosControlScanner(scan_config.ros),
         ScenarioScanner(),
+        PromptInjectionScanner(),
     )
 
     dedupe: set[tuple[str, str, int | None, str]] = set()

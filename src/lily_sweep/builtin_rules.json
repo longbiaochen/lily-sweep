@@ -52,5 +52,32 @@
     "regex": "(cmd_vel|joint_trajectory|gripper_command|unlock-door|elevator-control|arm_controller)",
     "extensions": [".py", ".json", ".yaml", ".yml", ".toml"],
     "remediation": "Audit whether the referenced actuator surface is gated by role, rate, workspace boundary, and deployment mode."
+  },
+  {
+    "id": "eval-exec-injection",
+    "title": "Dynamic code evaluation via eval or exec",
+    "severity": "high",
+    "category": "code-execution",
+    "regex": "\\beval\\s*\\(|\\bexec\\s*\\(",
+    "extensions": [".py"],
+    "remediation": "Replace eval/exec with a safe, structured alternative. If evaluation is required, validate and sandbox the input before execution."
+  },
+  {
+    "id": "insecure-deserialization",
+    "title": "Insecure deserialization of untrusted data",
+    "severity": "high",
+    "category": "code-execution",
+    "regex": "pickle\\.loads\\s*\\(|yaml\\.load\\s*\\(|marshal\\.loads\\s*\\(",
+    "extensions": [".py"],
+    "remediation": "Use safe alternatives: json, yaml.safe_load, or restrict deserialization to trusted, signed payloads."
+  },
+  {
+    "id": "hardcoded-robot-endpoint",
+    "title": "Hardcoded robot or actuator network endpoint",
+    "severity": "medium",
+    "category": "actuator-surface",
+    "regex": "(?:robot_ip|robot_host|actuator_ip|actuator_endpoint|robot_url)\\s*(?:=|:)\\s*[\"'][0-9]",
+    "extensions": [".py", ".json", ".yaml", ".yml", ".toml", ".env"],
+    "remediation": "Load robot endpoints from environment variables or a deployment-specific config file rather than hardcoding them in source."
   }
 ]

@@ -1,0 +1,59 @@
+name: LilySweep Preflight Scan
+description: >
+  Preflight hazard scanner for embodied AI systems.
+  Scans a repository for dangerous shell execution, wildcard tool grants,
+  missing guardrails, ROS control-plane exposure, prompt-injection paths,
+  and risky operational scenarios.
+
+inputs:
+  path:
+    description: Path to the repository or bundle to scan.
+    default: .
+  fail-on:
+    description: >
+      Exit with code 2 when any finding meets or exceeds this severity.
+      Valid values: info, low, medium, high, critical.
+    default: high
+  format:
+    description: Output format for the scan report (text, json, sarif).
+    default: sarif
+  output:
+    description: >
+      Output file path for the scan report.
+      Defaults to lily-sweep.sarif when format is sarif.
+    default: lily-sweep.sarif
+  baseline:
+    description: >
+      Path to a baseline JSON file whose accepted findings should be ignored.
+      Generate one with: lily-sweep baseline <path> --output lilysweep-baseline.json
+    default: ""
+  python-version:
+    description: Python version to use when installing LilySweep.
+    default: "3.11"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install LilySweep
+      shell: bash
+      run: pip install "${{ github.action_path }}"
+
+    - name: Run LilySweep scan
+      shell: bash
+      env:
+        LILY_PATH: ${{ inputs.path }}
+        LILY_FORMAT: ${{ inputs.format }}
+        LILY_OUTPUT: ${{ inputs.output }}
+        LILY_FAIL_ON: ${{ inputs.fail-on }}
+        LILY_BASELINE: ${{ inputs.baseline }}
+      run: |
+        args=("$LILY_PATH" "--format" "$LILY_FORMAT" "--output" "$LILY_OUTPUT" "--fail-on" "$LILY_FAIL_ON")
+        if [ -n "$LILY_BASELINE" ]; then
+          args+=("--baseline" "$LILY_BASELINE")
+        fi
+        lily-sweep scan "${args[@]}"
